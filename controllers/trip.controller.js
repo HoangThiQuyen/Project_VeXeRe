@@ -57,6 +57,7 @@ const deleteTrip = async (req, res) => {
     res.status(500).send(error);
   }
 };
+const demo = () => {};
 
 module.exports = {
   createTrip,
