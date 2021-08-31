@@ -58,6 +58,8 @@ const deleteTrip = async (req, res) => {
   }
 };
 const demo = () => {};
+const demo2 = () => {};
+
 module.exports = {
   createTrip,
   getAllTrip,
