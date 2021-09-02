@@ -9,14 +9,40 @@ const createTrip = async (req, res) => {
     startTime,
     price,
   });
+
   res.status(201).send(newTrip);
 };
 
 //get all trip
 const getAllTrip = async (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   try {
-    const tripList = await Trip.findAll();
-    res.status(200).send(tripList);
+    const tripListLimit = await Trip.findAndCountAll(
+      page && limit
+        ? {
+            offset: (page - 1) * limit,
+            limit,
+          }
+        : {}
+    );
+
+    res.status(200).send(
+      page && limit
+        ? {
+            data: tripListLimit.rows,
+            metadata: {
+              page: page,
+              num_page:
+                tripListLimit.count % limit === 0
+                  ? Math.floor(tripListLimit.count / limit)
+                  : Math.floor(tripListLimit.count / limit) + 1,
+              count: tripListLimit.count,
+              limit,
+            },
+          }
+        : { data: tripListLimit.rows }
+    );
   } catch (error) {
     res.status(500).send(error);
   }

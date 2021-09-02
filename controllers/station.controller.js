@@ -1,10 +1,33 @@
 const { Station } = require("../models");
+const { SearchAllAttributes } = require("../components/SearchAllAttributes");
+const { Op } = require("sequelize");
 
 //get all station
 const getAllStations = async (req, res) => {
+  const { search } = req.query;
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   try {
-    const listStation = await Station.findAll();
-    res.status(200).send(listStation);
+    const listStation = await Station.findAndCountAll({
+      offset: page && limit ? (page - 1) * limit : null,
+      limit: limit || null,
+      where: search && {
+        [Op.or]: SearchAllAttributes(["name", "address", "province"], search),
+      },
+    });
+    res.status(200).send({
+      data: listStation.rows,
+      metadata: {
+        page: page || 1,
+        num_page: limit
+          ? listStation.count % limit === 0
+            ? Math.floor(listStation.count / limit)
+            : Math.floor(listStation.count / limit) + 1
+          : 1,
+        count: listStation.count,
+        limit: limit || listStation.count,
+      },
+    });
   } catch (error) {
     res.status(500).send(error);
   }

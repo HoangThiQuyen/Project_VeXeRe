@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const moment = require("moment");
 module.exports = (sequelize, DataTypes) => {
   class Trip extends Model {
     /**
@@ -20,7 +21,19 @@ module.exports = (sequelize, DataTypes) => {
   }
   Trip.init(
     {
-      startTime: DataTypes.DATE,
+      startTime: {
+        type: DataTypes.DATE,
+        get: function () {
+          let time = this.getDataValue("startTime");
+          if (moment(time, moment.ISO_8601, true).isValid()) {
+            return moment(this.getDataValue("startTime")).format(
+              "YYYY-MM-DD HH:mm:ss"
+            );
+          } else {
+            return time;
+          }
+        },
+      },
       price: DataTypes.FLOAT,
     },
     {
