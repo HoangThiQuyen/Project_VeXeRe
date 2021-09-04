@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ Trip }) {
       // define association here
 
-      this.hasMany(Trip, { foreignKey: "fromStation" });
-      this.hasMany(Trip, { foreignKey: "toStation" });
+      this.hasMany(Trip, { foreignKey: "fromStation", as: "fromStation_info" });
+      this.hasMany(Trip, { foreignKey: "toStation", as: "toStation_info" });
     }
   }
   Station.init(

@@ -3,7 +3,8 @@ const { body, check, validationResult } = require("express-validator");
 const checkNull = (data) =>
   data.map((ele) => body(ele, `${ele} does not Empty`).not().isEmpty());
 
-const checkNumber = (item) => check(item, `${item} is Number`).isNumeric();
+const checkNumber = (item) => check(item, `${item} is Number`).isInt();
+const checkFloat = (item) => check(item, `${item} is Float`).isFloat();
 
 const checkDate = (item) =>
   check(item, `${item} is Date format 'YYYY-MM-DD hh:mm:ss'`).isISO8601();
@@ -28,4 +29,11 @@ const showError = (req, res, next) => {
   }
 };
 
-module.exports = { checkNull, showError, checkExists, checkNumber, checkDate };
+module.exports = {
+  checkNull,
+  showError,
+  checkExists,
+  checkNumber,
+  checkDate,
+  checkFloat,
+};

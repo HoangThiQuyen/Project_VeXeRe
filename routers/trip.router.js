@@ -11,6 +11,7 @@ const {
   checkNumber,
   checkNull,
   checkDate,
+  checkFloat,
 } = require("../middlewares/validation/validation");
 
 const tripRouter = express.Router();
@@ -21,6 +22,7 @@ tripRouter.post(
   checkNumber("fromStation"),
   checkNumber("toStation"),
   checkDate("startTime"),
+  checkFloat("price"),
   showError,
   createTrip
 );

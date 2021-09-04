@@ -10,8 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Station, Ticket, User, PassengerCarCompanies }) {
       // define association here
-      this.belongsTo(Station, { foreignKey: "fromStation" });
-      this.belongsTo(Station, { foreignKey: "toStation" });
+      this.belongsTo(Station, {
+        foreignKey: "fromStation",
+        as: "fromStation_info",
+      });
+      this.belongsTo(Station, {
+        foreignKey: "toStation",
+        as: "toStation_info",
+      });
 
       this.hasMany(Ticket, { foreignKey: "tripId" });
       this.belongsToMany(User, { through: Ticket });
