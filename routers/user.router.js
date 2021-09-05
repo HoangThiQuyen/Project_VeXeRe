@@ -5,16 +5,42 @@ const {
   deleteUser,
   getDetailUser,
   login,
+  uploadAvatar,
 } = require("../controllers/user.controller");
+const { User } = require("../models");
 const { authenticate } = require("../middlewares/auth/authenticate");
 const { authorize } = require("../middlewares/auth/authorize");
+const {
+  checkExists,
+  showError,
+  checkNull,
+} = require("../middlewares/validation/validation");
+const { uploadImage } = require("../middlewares/upload/upload-image");
 
 const userRouter = express.Router();
 
-userRouter.post("/register", register);
-userRouter.post("/login", login);
+userRouter.post(
+  "/register",
+  checkNull(["name", "numberPhone", "email", "password"]),
+  showError,
+  register
+);
+userRouter.post("/login", checkNull(["email", "password"]), showError, login);
 userRouter.get("/", authenticate, authorize, getListUser);
-userRouter.get("/:id", authenticate, getDetailUser);
-userRouter.delete("/:id", authenticate, authorize, deleteUser);
+userRouter.get("/:id", authenticate, checkExists(User), getDetailUser);
+
+userRouter.post(
+  "/upload-image",
+  authenticate,
+  uploadImage("avatar"),
+  uploadAvatar
+);
+userRouter.delete(
+  "/:id",
+  authenticate,
+  authorize,
+  checkExists(User),
+  deleteUser
+);
 
 module.exports = { userRouter };

@@ -1,5 +1,5 @@
 const authorize = (req, res, next) => {
-  const { user } = req.user;
+  const { user } = req;
   if (["ADMIN", "SUPER_ADMIN"].findIndex((ele) => ele === user.type) !== -1) {
     next();
   } else {

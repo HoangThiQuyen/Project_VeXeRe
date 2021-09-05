@@ -12,7 +12,9 @@ const {
   checkNull,
   checkDate,
   checkFloat,
+  checkExists,
 } = require("../middlewares/validation/validation");
+const { Trip } = require("../models");
 
 const tripRouter = express.Router();
 
@@ -27,9 +29,9 @@ tripRouter.post(
   createTrip
 );
 tripRouter.get("/", getAllTrip);
-tripRouter.get("/:id", getDetailTrip);
-tripRouter.put("/:id", updateTrip);
-tripRouter.delete("/:id", deleteTrip);
+tripRouter.get("/:id", checkExists(Trip), getDetailTrip);
+tripRouter.put("/:id", checkExists(Trip), updateTrip);
+tripRouter.delete("/:id", checkExists(Trip), deleteTrip);
 
 module.exports = {
   tripRouter,

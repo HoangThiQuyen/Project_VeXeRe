@@ -3,13 +3,27 @@ const { sequelize } = require("./models");
 const { rootRouter } = require("./routers");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+const Fingerprint = require("express-fingerprint");
+const path = require("path");
 
 const app = express();
 
+// dùng để phân biệt mac,windown,hay ubuntu, và đang dùng trình duyệt(Chorme,CocCoc) gì
+app.use(Fingerprint());
+
 app.use(express.json());
+
 const port = process.env.PORT || 7000;
 
+//route
 app.use("/api/", rootRouter);
+
+//setup static file(lưu file,image,...)
+const publicPathDirectory = path.join(__dirname, "./public");
+// dùng /public để khi trả ra link hình có thêm/public
+app.use("/public", express.static(publicPathDirectory));
+
+//-------viết docs swagger--------
 const options = {
   definition: {
     openapi: "3.0.3", // present supported openapi version
@@ -36,6 +50,8 @@ const options = {
 };
 const openapiSpecification = swaggerJsDoc(options);
 app.use("/api", swaggerUI.serve, swaggerUI.setup(openapiSpecification));
+
+//-------------------------
 
 app.listen(port, async () => {
   console.log(`http://localhost:${port}`);

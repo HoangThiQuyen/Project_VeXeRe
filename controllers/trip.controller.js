@@ -129,7 +129,7 @@ const deleteTrip = async (req, res) => {
       },
     });
     await Trip.destroy({ where: { id } });
-    res.status(204).send(deleteTrip);
+    res.status(200).send(deleteTrip);
   } catch (error) {
     res.status(500).send(error);
   }

@@ -74,7 +74,7 @@ const deleteStation = async (req, res) => {
   try {
     const deleteStation = await Station.findOne({ where: { id } });
     await Station.destroy({ where: { id } });
-    res.status(204).send(deleteStation);
+    res.status(200).send(deleteStation);
   } catch (error) {
     res.status(500).send(error);
   }
