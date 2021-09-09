@@ -14,6 +14,7 @@ module.exports = {
           model: "Stations",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       toStation: {
         type: Sequelize.INTEGER,
@@ -21,6 +22,7 @@ module.exports = {
           model: "Stations",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       startTime: {
         type: Sequelize.DATE,

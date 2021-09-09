@@ -6,6 +6,7 @@ const {
   getDetailUser,
   login,
   uploadAvatar,
+  updateUser,
 } = require("../controllers/user.controller");
 const { User } = require("../models");
 const { authenticate } = require("../middlewares/auth/authenticate");
@@ -26,8 +27,9 @@ userRouter.post(
   register
 );
 userRouter.post("/login", checkNull(["email", "password"]), showError, login);
-userRouter.get("/", authenticate, authorize, getListUser);
+userRouter.get("/", getListUser);
 userRouter.get("/:id", authenticate, checkExists(User), getDetailUser);
+userRouter.put("/:id", updateUser);
 
 userRouter.post(
   "/upload-image",

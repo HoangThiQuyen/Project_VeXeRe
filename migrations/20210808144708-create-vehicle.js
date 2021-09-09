@@ -17,6 +17,7 @@ module.exports = {
           model: "PassengerCarCompanies",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

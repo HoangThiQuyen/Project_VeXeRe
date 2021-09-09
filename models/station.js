@@ -10,8 +10,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ Trip }) {
       // define association here
 
-      this.hasMany(Trip, { foreignKey: "fromStation", as: "fromStation_info" });
-      this.hasMany(Trip, { foreignKey: "toStation", as: "toStation_info" });
+      this.hasMany(Trip, {
+        foreignKey: "fromStation",
+        as: "fromStation_info",
+        onDelete: "CASCADE",
+      });
+      this.hasMany(Trip, {
+        foreignKey: "toStation",
+        as: "toStation_info",
+        onDelete: "CASCADE",
+      });
     }
   }
   Station.init(

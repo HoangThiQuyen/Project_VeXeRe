@@ -23,6 +23,7 @@ module.exports = {
           model: "Trips",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

@@ -3,7 +3,7 @@ const multer = require("multer");
 
 const uploadImage = (type) => {
   // tạo đường dẫn mà folder chưa được tạo trước
-  mkdirp.sync(`./public/images/${type}`);
+  // mkdirp.sync(`./public/images/${type}`);
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //setup thư mục lưu file

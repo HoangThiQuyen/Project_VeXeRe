@@ -19,10 +19,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "toStation_info",
       });
 
-      this.hasMany(Ticket, { foreignKey: "tripId" });
+      this.hasMany(Ticket, { foreignKey: "tripId", onDelete: "CASCADE" });
       this.belongsToMany(User, { through: Ticket });
 
-      this.hasMany(PassengerCarCompanies, { foreignKey: "tripId" });
+      this.hasMany(PassengerCarCompanies, {
+        foreignKey: "tripId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Trip.init(

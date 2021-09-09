@@ -2,6 +2,8 @@ const { User } = require("../models");
 const gravatar = require("gravatar");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("../middlewares/upload/cloudinary");
+const fs = require("fs");
 
 const register = async (req, res) => {
   const { name, numberPhone, email, password, type } = req.body;
@@ -52,7 +54,7 @@ const login = async (req, res) => {
       const accessToken = jwt.sign(
         { email: user.email, type: user.type },
         "hoangquyen8599",
-        { expiresIn: 10 }
+        { expiresIn: "1h" }
       );
       res.status(200).send({
         message: "Success",
@@ -67,15 +69,30 @@ const login = async (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-  const { user, file } = req;
-  const urlImage = `https://q-vexere.herokuapp.com/${file.path}`;
-  const userFound = await User.findOne({
-    where: { email: user.email },
-    attributes: { exclude: ["password"] },
-  });
-  userFound.avatar = urlImage;
-  await userFound.save();
-  res.status(200).send(userFound);
+  // const { user, file } = req;
+  // const urlImage = `https://q-vexere.herokuapp.com/${file.path}`;
+  // const userFound = await User.findOne({
+  //   where: { email: user.email },
+  //   attributes: { exclude: ["password"] },
+  // });
+  // userFound.avatar = urlImage;
+  // await userFound.save();
+  // res.status(200).send(userFound);
+  try {
+    const uploader = async (path) => await cloudinary.uploads(path, "Avatars");
+    const { user, file } = req;
+    const newPath = await uploader(file.path);
+    fs.unlinkSync(file.path);
+    const userFound = await User.findOne({
+      where: { email: user.email },
+      attributes: { exclude: ["password"] },
+    });
+    userFound.avatar = newPath.url;
+    await userFound.save();
+    res.status(200).send({ message: "Updated Avatar", data: userFound });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 const getListUser = async (req, res) => {
@@ -122,6 +139,28 @@ const getDetailUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  try {
+    const salt = data.password && bcryptjs.genSaltSync(10);
+    const hashPassword =
+      data.password && bcryptjs.hashSync(data.password, salt);
+    data.password = hashPassword || data.password;
+    console.log(data.password);
+
+    await User.update(req.body, { where: { id } });
+
+    const updateUser = await User.findOne({
+      where: { id },
+      attributes: { exclude: ["password"] },
+    });
+    res.status(200).send(updateUser);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -140,4 +179,5 @@ module.exports = {
   getDetailUser,
   login,
   uploadAvatar,
+  updateUser,
 };

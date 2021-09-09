@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(PassengerCarCompanies, {
         foreignKey: "passengerCarCompanyId",
       });
-      this.hasMany(Seat, { foreignKey: "vehicleId" });
+      this.hasMany(Seat, { foreignKey: "vehicleId", onDelete: "CASCADE" });
     }
   }
   Vehicle.init(
